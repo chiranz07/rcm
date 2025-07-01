@@ -1,0 +1,35 @@
+# Node.js dependencies
+node_modules/
+
+# Build artifacts
+dist/
+
+# Environment variables
+.env.local
+.env.production.local # Good to include common ones
+.env.development.local
+
+# IDE specific files
+.idea/
+
+# Firebase specific files
+.firebase/
+firebase-debug.log* # Good to include logs
+
+# Compressed archives / Backups
+*.rar
+*.zip
+*.tar.gz
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/ # Only if you don't want to share workspace settings
