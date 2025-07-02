@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { writeBatch, collection, doc } from 'firebase/firestore';
 import { Plus, Search, Pencil, Trash2, Upload } from 'lucide-react';
 import { db, appId } from '../api/firebase';
-import { initialEntityState, placeOfSupplyOptions } from '../constants';
+import { initialEntityState, placeOfSupplyOptions } from '../constants'; // initialEntityState is imported from here
 import FormModal from './common/FormModal';
 import ImportModal from './common/ImportModal';
 import SearchableDropdown from './common/SearchableDropdown';
@@ -49,6 +49,13 @@ const EntityFormModal = ({ entity, setEntity, onClose, onSubmit, error, isEditin
                 <div><label className="form-label">Place of Supply*</label><SearchableDropdown options={placeOfSupplyOptions} value={entity.placeOfSupply} onChange={(value) => setEntity({...entity, placeOfSupply: value})} /></div>
                 <div><label className="form-label">Email*</label><input type="email" name="email" value={entity.email} onChange={handleChange} className="form-input-modal" required /></div>
                 <div><label className="form-label">Phone*</label><input type="tel" name="phone" value={entity.phone} onChange={handleChange} className="form-input-modal" required /></div>
+            </div>
+            <div className="border-t pt-4 mt-4">
+                <h4 className="text-md font-semibold text-gray-700 mb-3">Other Details</h4> {/* New section for MSME No and LUT */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label className="form-label">MSME No.</label><input type="text" name="msmeNo" value={entity.msmeNo || ''} onChange={handleChange} className="form-input-modal" /></div>
+                    <div><label className="form-label">LUT</label><input type="text" name="lut" value={entity.lut || ''} onChange={handleChange} className="form-input-modal" /></div>
+                </div>
             </div>
             <div className="border-t pt-4 mt-4"><h4 className="text-md font-semibold text-gray-700 mb-3">Invoice Settings</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="form-label">Invoice Prefix</label><input type="text" name="invoicePrefix" value={entity.invoicePrefix || 'INV-'} onChange={handleChange} className="form-input-modal" /></div><div><label className="form-label">Next Invoice Number</label><input type="number" name="nextInvoiceNumber" value={entity.nextInvoiceNumber || 1} onChange={handleChange} className="form-input-modal" min="1"/></div></div></div>
             <div className="border-t pt-4 mt-4"><h4 className="text-md font-semibold text-gray-700 mb-3">Address</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div className="md:col-span-2"><label className="form-label">Address Line 1</label><input type="text" name="line1" value={entity.address.line1} onChange={handleAddressChange} className="form-input-modal" /></div><div className="md:col-span-2"><label className="form-label">Address Line 2</label><input type="text" name="line2" value={entity.address.line2} onChange={handleAddressChange} className="form-input-modal" /></div><div><label className="form-label">City</label><input type="text" name="city" value={entity.address.city} onChange={handleAddressChange} className="form-input-modal" /></div><div><label className="form-label">State</label><input type="text" name="state" value={entity.address.state} onChange={handleAddressChange} className="form-input-modal" /></div><div><label className="form-label">Pincode</label><input type="text" name="pincode" value={entity.address.pincode} onChange={handleAddressChange} className="form-input-modal" /></div><div><label className="form-label">Country</label><input type="text" name="country" value={entity.address.country} onChange={handleAddressChange} className="form-input-modal" /></div></div></div>
@@ -124,13 +131,14 @@ function EntityManagement() {
                     pincode: item.address_pincode || '',
                     country: item.address_country || '',
                 },
-                // Add bank details here
                 bankDetails: {
                     accountHolderName: item.bank_accountHolderName || '',
                     bankName: item.bank_bankName || '',
                     accountNumber: item.bank_accountNumber || '',
                     ifscCode: item.bank_ifscCode || ''
-                }
+                },
+                msmeNo: item.msmeNo || '', // Added for import
+                lut: item.lut || '' // Added for import
             };
             batch.set(docRef, newEntity);
         });

@@ -4,7 +4,7 @@ import { useAppContext } from '../../context/AppContext';
 
 const InvoiceFormHeader = ({ invoice, handleInvoiceDataChange, entities, customers, errors, isProformaDisabled, isConverting = false }) => {
     const { partners } = useAppContext();
-     return (
+    return (
         <div className="grid grid-cols-1 md:grid-cols-6 gap-x-5 gap-y-5">
             <div className="md:col-span-3">
                 <label className="form-label">Billing From (Entity)</label>
@@ -28,7 +28,7 @@ const InvoiceFormHeader = ({ invoice, handleInvoiceDataChange, entities, custome
                     error={errors.customerId}
                     disabled={isConverting}
                 />
-                 {errors.customerId && <p className="text-red-500 text-xs mt-1">{errors.customerId}</p>}
+                {errors.customerId && <p className="text-red-500 text-xs mt-1">{errors.customerId}</p>}
             </div>
 
             <div className="md:col-span-2">
@@ -40,7 +40,7 @@ const InvoiceFormHeader = ({ invoice, handleInvoiceDataChange, entities, custome
                 <input type="date" name="invoiceDate" value={invoice.invoiceDate} onChange={handleInvoiceDataChange} className={`form-input ${errors.invoiceDate ? 'border-red-500' : ''}`} required disabled={isConverting}/>
                 {errors.invoiceDate && <p className="text-red-500 text-xs mt-1">{errors.invoiceDate}</p>}
             </div>
-             <div className="md:col-span-2">
+            <div className="md:col-span-2">
                 <label className="form-label text-xs">Payment Terms (Days)</label>
                 <input type="number" name="paymentTerms" value={invoice.paymentTerms} onChange={handleInvoiceDataChange} placeholder="e.g., 30" className={`form-input no-arrows ${errors.paymentTerms ? 'border-red-500' : ''}`} required disabled={isConverting}/>
                 {errors.paymentTerms && <p className="text-red-500 text-xs mt-1">{errors.paymentTerms}</p>}
@@ -62,7 +62,7 @@ const InvoiceFormHeader = ({ invoice, handleInvoiceDataChange, entities, custome
                     valueProp="name"
                     disabled={isConverting}
                 />
-                 {errors.partner && <p className="text-red-500 text-xs mt-1">{errors.partner}</p>}
+                {errors.partner && <p className="text-red-500 text-xs mt-1">{errors.partner}</p>}
             </div>
             <div className="md:col-span-2 self-end">
                 <label className="form-label">Invoice Type</label>
@@ -73,6 +73,18 @@ const InvoiceFormHeader = ({ invoice, handleInvoiceDataChange, entities, custome
                         Proforma
                     </label>
                 </div>
+            </div>
+            {/* New Narration Field */}
+            <div className="md:col-span-6">
+                <label className="form-label text-xs">Narration</label>
+                <textarea
+                    name="narration"
+                    value={invoice.narration}
+                    onChange={handleInvoiceDataChange}
+                    placeholder="Add any additional notes or narration here..."
+                    rows="3"
+                    className="form-input"
+                ></textarea>
             </div>
         </div>
     );

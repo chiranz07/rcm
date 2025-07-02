@@ -63,13 +63,10 @@ const CreateInvoice = () => {
     const formatIndianCurrency = (num) => Number(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     const { totals, shouldApplyGst } = useMemo(() => {
-        const grossTotal = invoice.items.reduce((acc, item) => acc + (Number(item.quantity) * Number(item.rate)), 0);
-        const totalDiscount = invoice.items.reduce((acc, item) => {
-            const rate = Number(item.rate) || 0;
-            const discount = Number(item.discount) || 0;
-            return discount < rate ? acc + discount : acc;
-        }, 0);
-        const taxableTotal = grossTotal - totalDiscount;
+        // Calculate totals based on the new 'amount' field
+        const grossTotal = invoice.items.reduce((acc, item) => acc + (Number(item.amount || 0)), 0); // Use item.amount
+        const totalDiscount = 0; // Discount field has been removed
+        const taxableTotal = grossTotal; // Taxable total is now the same as grossTotal as there's no discount
 
         let applyGst = isGstApplicable || isConverting;
 
@@ -83,11 +80,8 @@ const CreateInvoice = () => {
 
         const totalGst = applyGst
             ? invoice.items.reduce((acc, item) => {
-                const rate = Number(item.rate) || 0;
-                const discount = Number(item.discount) || 0;
-                const itemTotal = (Number(item.quantity) * rate);
-                const itemTaxable = itemTotal - (discount < rate ? discount : 0);
-                return acc + (itemTaxable * (Number(item.gstRate) / 100));
+                const itemAmount = Number(item.amount || 0); // Use item.amount
+                return acc + (itemAmount * (Number(item.gstRate) / 100));
             }, 0)
             : 0;
 

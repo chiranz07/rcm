@@ -10,7 +10,7 @@ export const placeOfSupplyOptions = [
     { code: "17", name: "Meghalaya" }, { code: "18", name: "Assam" },
     { code: "19", name: "West Bengal" }, { code: "20", name: "Jharkhand" },
     { code: "21", name: "Odisha" }, { code: "22", name: "Chhattisgarh" },
-    { code: "23", name: "Madhya Pradesh" }, { code: "24", name: "Gujarat" },
+    { code: "23", "name": "Madhya Pradesh" }, { code: "24", name: "Gujarat" },
     { code: "25", name: "Daman & Diu" }, { code: "26", name: "Dadra & Nagar Haveli" },
     { code: "27", name: "Maharashtra" }, { code: "28", name: "Andhra Pradesh (pre-division)" },
     { code: "29", name: "Karnataka" }, { code: "30", name: "Goa" },
@@ -34,14 +34,14 @@ export const initialEntityState = {
     address: { line1: '', line2: '', city: '', state: '', pincode: '', country: '' },
     invoicePrefix: 'INV-',
     nextInvoiceNumber: 1,
-    // --- NEW: Add bank details ---
     bankDetails: {
         accountHolderName: '',
         bankName: '',
         accountNumber: '',
         ifscCode: ''
-    }
+    },
+    msmeNo: '', // New field for MSME No.
+    lut: '' // New field for LUT
 };
 
-// --- UPDATED ---
 export const initialCustomerState = { name: '', email: '', phone: '', gstin: '', pan: '', isGstRegistered: 'No', placeOfSupply: '', address: { line1: '', line2: '', city: '', state: '', pincode: '', country: '' }};

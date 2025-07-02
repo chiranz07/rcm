@@ -1,4 +1,3 @@
-// src/components/InvoicePDF.jsx
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Font } from '@react-pdf/renderer';
 
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
     invoiceInfoColumn: {
         width: '50%',
         padding: 5,
-        flexDirection: 'row', // Use flexbox for alignment
+        flexDirection: 'row',
     },
     leftInfoCol: {
         borderRight: 1
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontFamily: 'Roboto',
         fontSize: 9,
-        width: 70, // Consistent width for labels
+        width: 70,
     },
     infoValue: {
         fontSize: 9,
@@ -154,6 +153,21 @@ const styles = StyleSheet.create({
         display: 'table',
         width: 'auto',
     },
+    narrationContainer: {
+        marginTop: 10,
+        padding: 5,
+        borderWidth: 1,
+        borderColor: '#000',
+    },
+    narrationHeader: {
+        fontFamily: 'Roboto',
+        fontWeight: 'bold',
+        fontSize: 10,
+        marginBottom: 3,
+    },
+    narrationText: {
+        fontSize: 9,
+    },
     bottomContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -221,7 +235,7 @@ const getTaxSummary = (invoice) => {
                 igst: 0
             };
         }
-        const itemTaxable = (Number(item.quantity) * Number(item.rate)) - (Number(item.discount) || 0);
+        const itemTaxable = Number(item.amount) || 0;
         summary[key].taxableValue += itemTaxable;
 
         if (invoice.gstType === 'IGST') {
@@ -236,7 +250,7 @@ const getTaxSummary = (invoice) => {
 
 
 const InvoicePDF = ({ invoice, customer, entity }) => {
-    const showGst = invoice.isGstApplicable; // Modified line: Removed "invoice.type !== 'Proforma'"
+    const showGst = invoice.isGstApplicable;
     const taxSummaryData = showGst ? getTaxSummary(invoice) : [];
     const displayTotal = invoice.type === 'Proforma' ? (invoice.taxableTotal || 0) : (invoice.total || 0);
     const amountInWords = numberToWords(Math.round(displayTotal));
@@ -257,6 +271,8 @@ const InvoicePDF = ({ invoice, customer, entity }) => {
                             <Text style={styles.addressText}>{`${entity?.address?.city} ${entity?.address?.pincode}`}</Text>
                             <Text style={styles.addressText}>{entity?.address?.state?.toUpperCase()}, INDIA</Text>
                             <Text style={styles.addressText}><Text style={styles.bold}>GSTIN:</Text> {entity?.gstin || 'N/A'}</Text>
+                            {entity?.msmeNo && <Text style={styles.addressText}><Text style={styles.bold}>MSME No:</Text> {entity.msmeNo}</Text>} {/* Added MSME No. */}
+                            {entity?.lut && <Text style={styles.addressText}><Text style={styles.bold}>LUT:</Text> {entity.lut}</Text>} {/* Added LUT */}
                             <Text style={styles.addressText}><Text style={styles.bold}>E-Mail:</Text> {entity?.email}</Text>
                         </View>
 
@@ -286,22 +302,16 @@ const InvoicePDF = ({ invoice, customer, entity }) => {
                 <View style={styles.table}>
                     <View style={styles.tableRow}>
                         <View style={{ ...styles.tableColHeader, width: '6%' }}><Text style={styles.tableCellHeader}>Sl No.</Text></View>
-                        <View style={{ ...styles.tableColHeader, width: '38%' }}><Text style={styles.tableCellHeader}>Description of Goods</Text></View>
-                        <View style={{ ...styles.tableColHeader, width: '12%' }}><Text style={styles.tableCellHeader}>HSN/SAC</Text></View>
-                        <View style={{ ...styles.tableColHeader, width: '8%' }}><Text style={styles.tableCellHeader}>Qty</Text></View>
-                        <View style={{ ...styles.tableColHeader, width: '12%' }}><Text style={styles.tableCellHeader}>Rate</Text></View>
-                        <View style={{ ...styles.tableColHeader, width: '8%' }}><Text style={styles.tableCellHeader}>per</Text></View>
-                        <View style={{ ...styles.tableColHeader, width: '16%', borderRightWidth: 0 }}><Text style={styles.tableCellHeader}>Amount</Text></View>
+                        <View style={{ ...styles.tableColHeader, width: '54%' }}><Text style={styles.tableCellHeader}>Description of Goods</Text></View>
+                        <View style={{ ...styles.tableColHeader, width: '15%' }}><Text style={styles.tableCellHeader}>HSN/SAC</Text></View>
+                        <View style={{ ...styles.tableColHeader, width: '25%', borderRightWidth: 0 }}><Text style={styles.tableCellHeader}>Amount</Text></View>
                     </View>
                     {invoice.items.map((item, i) => (
                         <View key={i} style={{...styles.tableRow, borderBottomWidth: 1}}>
                             <View style={{ ...styles.tableCol, width: '6%', ...styles.textCenter }}><Text style={styles.tableCell}>{i + 1}</Text></View>
-                            <View style={{ ...styles.tableCol, width: '38%' }}><Text style={styles.tableCell}>{item.description}</Text></View>
-                            <View style={{ ...styles.tableCol, width: '12%', ...styles.textCenter }}><Text style={styles.tableCell}>{item.hsn || 'N/A'}</Text></View>
-                            <View style={{ ...styles.tableCol, width: '8%', ...styles.textRight }}><Text style={styles.tableCell}>{item.quantity}</Text></View>
-                            <View style={{ ...styles.tableCol, width: '12%', ...styles.textRight }}><Text style={styles.tableCell}>{formatCurrency(item.rate)}</Text></View>
-                            <View style={{ ...styles.tableCol, width: '8%', ...styles.textCenter }}><Text style={styles.tableCell}>Nos</Text></View>
-                            <View style={{ ...styles.tableCol, width: '16%', ...styles.textRight, borderRightWidth: 0 }}><Text style={styles.tableCell}>{formatCurrency(item.quantity * item.rate)}</Text></View>
+                            <View style={{ ...styles.tableCol, width: '54%' }}><Text style={styles.tableCell}>{item.description}</Text></View>
+                            <View style={{ ...styles.tableCol, width: '15%', ...styles.textCenter }}><Text style={styles.tableCell}>{item.hsn || 'N/A'}</Text></View>
+                            <View style={{ ...styles.tableCol, width: '25%', ...styles.textRight, borderRightWidth: 0 }}><Text style={styles.tableCell}>{formatCurrency(item.amount)}</Text></View>
                         </View>
                     ))}
                 </View>
@@ -343,9 +353,17 @@ const InvoicePDF = ({ invoice, customer, entity }) => {
                     </View>
                 </View>}
 
+                {/* Narration Section */}
+                {invoice.narration && (
+                    <View style={styles.narrationContainer}>
+                        <Text style={styles.narrationHeader}>Narration:</Text>
+                        <Text style={styles.narrationText}>{invoice.narration}</Text>
+                    </View>
+                )}
+
                 <View style={styles.bottomContainer}>
                     <View style={styles.bankDetails}>
-                        <Text style={styles.bankDetailsHeader}>Company's Bank Details</Text>
+                        <Text style={styles.bankDetailsHeader}>Bank Details</Text>
                         <Text style={styles.bankDetailsText}>A/c Holder: {entity?.bankDetails?.accountHolderName}</Text>
                         <Text style={styles.bankDetailsText}>Bank Name: {entity?.bankDetails?.bankName}</Text>
                         <Text style={styles.bankDetailsText}>A/c No: {entity?.bankDetails?.accountNumber}</Text>

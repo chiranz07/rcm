@@ -118,7 +118,12 @@ const InvoiceTable = ({
                                                     <History size={16}/>
                                                 </button>
                                                 <div onClick={(e) => e.stopPropagation()}>
-                                                    <PDFDownloadLink document={<InvoicePDF invoice={invoice} customer={customers.find(c => c.id === invoice.customerId)} entity={entities.find(e => e.id === invoice.entityId)} />} fileName={`${invoice.invoiceNumber}.pdf`} className="p-2 block rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50" title="Download PDF">
+                                                    <PDFDownloadLink
+                                                        document={<InvoicePDF invoice={invoice} customer={customers.find(c => c.id === invoice.customerId)} entity={entities.find(e => e.id === invoice.entityId)} />}
+                                                        fileName={`${invoice.invoiceNumber || 'Invoice'}_${invoice.customerName || 'Customer'}.pdf`} // Modified filename with fallback
+                                                        className="p-2 block rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50"
+                                                        title="Download PDF"
+                                                    >
                                                         <Download size={16}/>
                                                     </PDFDownloadLink>
                                                 </div>

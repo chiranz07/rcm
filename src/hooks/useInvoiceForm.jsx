@@ -5,12 +5,13 @@ const initialInvoiceState = {
     entityId: '',
     customerId: '',
     partner: '',
-    paymentTerms: 30,
+    paymentTerms: 10, // Modified default from 30 to 10
     invoiceNumber: '',
     invoiceDate: new Date().toISOString().slice(0, 10),
     dueDate: '',
-    items: [{ description: '', quantity: 1, rate: 0, discount: 0, gstRate: 18, hsn: '' }],
+    items: [{ description: '', amount: 0, gstRate: 18, hsn: '' }], // Removed quantity, rate, discount; added amount
     gstType: 'IGST',
+    narration: '', // New field for narration
 };
 
 export const useInvoiceForm = (existingInvoice, entities, customers) => {
@@ -42,13 +43,7 @@ export const useInvoiceForm = (existingInvoice, entities, customers) => {
         invoice.items.forEach((item, index) => {
             const itemError = {};
             if (!item.description.trim()) itemError.description = "Item description is required.";
-            if (!item.rate || Number(item.rate) <= 0) itemError.rate = "Rate must be greater than zero.";
-
-            const rate = parseFloat(item.rate) || 0;
-            const discount = parseFloat(item.discount) || 0;
-            if (discount >= rate && rate > 0) {
-                 itemError.discount = `Discount (₹${discount}) must be less than the rate (₹${rate}).`;
-            }
+            if (item.amount === '' || item.amount === null || Number(item.amount) <= 0) itemError.amount = "Amount must be greater than zero.";
 
             if (Object.keys(itemError).length > 0) {
                 itemErrors[index] = itemError;
@@ -74,17 +69,30 @@ export const useInvoiceForm = (existingInvoice, entities, customers) => {
         const nextItems = invoice.items.map((item, i) => {
             if (i === index) {
                 let processedValue = value;
-                if (name === 'rate' || name === 'discount') {
+                if (name === 'amount') {
                     processedValue = parseFloat(value.replace(/[^0-9.]/g, '')) || 0;
-                } else if (name === 'quantity') {
-                    const num = parseInt(value, 10);
-                    processedValue = isNaN(num) ? 1 : Math.max(0, num);
                 }
                 return { ...item, [name]: processedValue };
             }
             return item;
         });
         setInvoice(prev => ({ ...prev, items: nextItems }));
+
+        // Clear specific item error if it exists for the changed field
+        setErrors(prevErrors => {
+            if (prevErrors.items && prevErrors.items[index] && prevErrors.items[index][name]) {
+                const newItemsErrors = { ...prevErrors.items };
+                const newItemError = { ...newItemsErrors[index] };
+                delete newItemError[name];
+                if (Object.keys(newItemError).length === 0) {
+                    delete newItemsErrors[index];
+                } else {
+                    newItemsErrors[index] = newItemError;
+                }
+                return { ...prevErrors, items: newItemsErrors };
+            }
+            return prevErrors;
+        });
     };
 
     const handleProductSelection = (index, product) => {
@@ -101,7 +109,7 @@ export const useInvoiceForm = (existingInvoice, entities, customers) => {
         setInvoice(prev => ({ ...prev, items: nextItems }));
     };
 
-    const addItem = () => setInvoice(prev => ({ ...prev, items: [...prev.items, { description: '', quantity: 1, rate: 0, discount: 0, gstRate: 18, hsn: '' }] }));
+    const addItem = () => setInvoice(prev => ({ ...prev, items: [...prev.items, { description: '', amount: 0, gstRate: 18, hsn: '' }] }));
 
     const removeItem = (index) => {
         setInvoice(prev => ({ ...prev, items: prev.items.filter((_, i) => i !== index) }));

@@ -4,9 +4,8 @@ const InvoiceTotals = ({ totals, isGstApplicable, gstType, formatIndianCurrency 
     return (
         <div className="flex justify-end">
             <div className="w-full max-w-sm space-y-2">
-                <div className="flex justify-between items-center"><span className="text-gray-500">Gross Total:</span><span className="font-medium text-gray-800">₹{formatIndianCurrency(totals.grossTotal)}</span></div>
-                <div className="flex justify-between items-center"><span className="text-gray-500">Discount:</span><span className="font-medium text-red-500">-₹{formatIndianCurrency(totals.totalDiscount)}</span></div>
-                <div className="flex justify-between items-center pb-2 border-b border-dashed"><span className="text-gray-500">Taxable Amount:</span><span className="font-medium text-gray-800">₹{formatIndianCurrency(totals.taxableTotal)}</span></div>
+                <div className="flex justify-between items-center"><span className="text-gray-500">Amount:</span><span className="font-medium text-gray-800">₹{formatIndianCurrency(totals.taxableTotal)}</span></div>
+                {/* Removed Gross Total and Discount */}
 
                 {isGstApplicable && (
                     gstType === 'IGST' ? (
