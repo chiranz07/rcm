@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { useAppContext } from '../../context/AppContext'; // Import useAppContext
 
 const MarkAsPaidModal = ({ isOpen, onClose, onConfirm, invoice, entities }) => {
-    const { formatNumberIndian } = useAppContext(); // Use the global formatter
-
     const [paymentDate, setPaymentDate] = useState(new Date().toISOString().slice(0, 10));
     const [selectedBank, setSelectedBank] = useState('');
     const [totalAmountReceived, setTotalAmountReceived] = useState(invoice?.total || 0); // Manual Input
@@ -88,7 +85,7 @@ const MarkAsPaidModal = ({ isOpen, onClose, onConfirm, invoice, entities }) => {
                 {error && <p className="text-red-600 text-xs mb-3 bg-red-50 p-2 rounded-md">{error}</p>}
                 <div className="space-y-4">
                     <p className="text-sm text-gray-600">
-                        You are marking invoice <span className="font-bold">{invoice?.invoiceNumber}</span> (Total: ₹{formatNumberIndian(invoice?.total)}) as paid. Please provide the payment details.
+                        You are marking invoice <span className="font-bold">{invoice?.invoiceNumber}</span> (Total: ₹{invoice?.total?.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) as paid. Please provide the payment details.
                     </p>
                     <div>
                         <label className="form-label">Payment Received Date</label>
@@ -125,7 +122,7 @@ const MarkAsPaidModal = ({ isOpen, onClose, onConfirm, invoice, entities }) => {
                         <label className="form-label">GST TDS</label>
                         <input
                             type="number"
-                            value={formatNumberIndian(gstTds)} // Use formatter for display
+                            value={gstTds.toFixed(2)} // Display with 2 decimal places
                             className="form-input-modal bg-gray-100"
                             readOnly // GST TDS is calculated
                         />

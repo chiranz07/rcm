@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Home, FileText, Users, Briefcase, BarChart2,
-    ChevronsLeft, ChevronsRight, Settings, FilePlus, History, UserPlus
+    ChevronsLeft, ChevronsRight, Settings, FilePlus, History, DollarSign
 } from 'lucide-react';
 import { userSignOut } from '../api/firebase'; // Ensure userSignOut is imported
 
@@ -16,6 +16,7 @@ function Sidebar({ currentPage, userRole }) { // userRole is received as prop
         { to: "/customers", icon: <Users size={20} color="#8e44ad" />, label: "Customers", roles: ['admin', 'accountant'] },
         { to: "/invoices/new", icon: <FilePlus size={20} color="#16a085" />, label: "Create Invoice", roles: ['admin', 'accountant'] },
         { to: "/invoices", icon: <FileText size={20} color="#f39c12" />, label: "View Invoices", roles: ['admin', 'accountant', 'viewer'] },
+        { to: "/payments", icon: <DollarSign size={20} color="#2c3e50" />, label: "Payments", roles: ['admin', 'accountant', 'viewer'] },
         { to: "/reports", icon: <BarChart2 size={20} color="#d35400" />, label: "Reports", roles: ['admin', 'accountant', 'viewer'] },
         { to: "/audit-history", icon: <History size={20} color="#7f8c8d" />, label: "Audit History", roles: ['admin'] },
     ];

@@ -16,6 +16,7 @@ import PartnerSettings from './components/settings/PartnerSettings';
 import ReminderSettings from './components/settings/ReminderSettings';
 import CreateInvoice from './components/CreateInvoice';
 import ViewInvoices from './components/ViewInvoices';
+import ViewPayments from './components/ViewPayments'; // Import the new component
 import Reports from './components/Reports';
 import AuditHistory from './components/AuditHistory';
 import PageLoader from './components/common/PageLoader';
@@ -67,6 +68,7 @@ export default function App() {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/reports" element={<Reports />} />
                         <Route path="/invoices" element={<ViewInvoices />} />
+                        <Route path="/payments" element={<ViewPayments />} /> {/* Add new route */}
                         <Route path="/entities" element={<EntityManagement />} />
                         <Route path="/customers" element={<CustomerMaster />} />
                         <Route path="/invoices/new" element={<CreateInvoice />} />
