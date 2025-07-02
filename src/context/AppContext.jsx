@@ -11,6 +11,7 @@ export const useAppContext = () => {
 
 export const AppProvider = ({ children }) => {
     const [entities, setEntities] = useState([]);
+    const [customers, setCustomers] = useState([]);
     const [products, setProducts] = useState([]);
     const [partners, setPartners] = useState([]);
     const [isAppContextLoading, setIsAppContextLoading] = useState(true);
@@ -36,9 +37,10 @@ export const AppProvider = ({ children }) => {
             entities: `/artifacts/${appId}/entities`,
             products: `/artifacts/${appId}/products`,
             partners: `/artifacts/${appId}/partners`,
+            customers: `/artifacts/${appId}/customers`,
         };
         const unsubscribers = Object.entries(paths).map(([key, path]) => {
-            const setter = { entities: setEntities, products: setProducts, partners: setPartners }[key];
+            const setter = { entities: setEntities, products: setProducts, partners: setPartners, customers: setCustomers }[key];
             return onSnapshot(query(collection(db, path)), (snapshot) => {
                 setter(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
                 // Only set overall app loading to false once all initial data AND auth state is loaded
@@ -61,6 +63,7 @@ export const AppProvider = ({ children }) => {
         entities,
         products,
         partners,
+        customers,
         user, // Provide user object
         userRole, // Provide user role
         isLoading: isAppContextLoading || isAuthLoading, // Overall loading state

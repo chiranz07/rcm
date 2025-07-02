@@ -29,7 +29,8 @@ const formatAction = (log) => {
         case 'CONVERT_TO_INVOICE':
             return 'Converted to Invoice';
         case 'UPDATE_INVOICE_STATUS':
-            return `Status Changed to ${log.details.newStatus}`;
+            const newStatus = log.details.changes?.status?.to || 'Undefined Status';
+            return `Status Changed to ${newStatus}`;
         case 'MARK_INVOICE_AS_PAID':
             return 'Marked as Paid';
         default:
@@ -102,6 +103,7 @@ const InvoiceHistoryModal = ({ isOpen, onClose, invoice }) => {
                             <thead className="bg-gray-50 border-b-2 border-gray-200 text-xs uppercase text-gray-500 tracking-wider sticky top-0">
                                 <tr>
                                     <th className="px-4 py-3 font-semibold">Date & Time</th>
+                                    <th className="px-4 py-3 font-semibold">User</th>
                                     <th className="px-4 py-3 font-semibold">Action</th>
                                     <th className="px-4 py-3 font-semibold">Details of Change</th>
                                 </tr>
@@ -113,6 +115,7 @@ const InvoiceHistoryModal = ({ isOpen, onClose, invoice }) => {
                                     logs.map(log => (
                                         <tr key={log.id} className="border-b border-gray-100 last:border-b-0">
                                             <td className="px-4 py-3 text-gray-600 align-top whitespace-nowrap">{formatDate(log.timestamp)}</td>
+                                            <td className="px-4 py-3 text-gray-600 align-top">{log.userName || 'N/A'}</td>
                                             <td className="px-4 py-3 align-top">
                                                 <span className="font-semibold text-gray-700">{formatAction(log)}</span>
                                             </td>

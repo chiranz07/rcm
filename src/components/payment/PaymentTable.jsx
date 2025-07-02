@@ -31,7 +31,9 @@ const PaymentTable = ({ invoices, sortConfig, requestSort }) => {
                         <SortableHeader columnKey="paymentDate" sortConfig={sortConfig} requestSort={requestSort}>Payment Date</SortableHeader>
                         <SortableHeader columnKey="invoiceNumber" sortConfig={sortConfig} requestSort={requestSort}>Invoice #</SortableHeader>
                         <SortableHeader columnKey="customerName" sortConfig={sortConfig} requestSort={requestSort}>Customer</SortableHeader>
-                        <SortableHeader columnKey="total" sortConfig={sortConfig} requestSort={requestSort} className="text-right">Amount</SortableHeader>
+                        <SortableHeader columnKey="total" sortConfig={sortConfig} requestSort={requestSort} className="text-right">Total Amount</SortableHeader> {/* Changed 'Amount' to 'Total Amount' */}
+                        <SortableHeader columnKey="tdsReceivable" sortConfig={sortConfig} requestSort={requestSort} className="text-right">TDS Amount</SortableHeader> {/* Added TDS Amount header */}
+                        <SortableHeader columnKey="gstTds" sortConfig={sortConfig} requestSort={requestSort} className="text-right">TDS GST</SortableHeader> {/* Added TDS GST header */}
                         <SortableHeader columnKey="paymentReceivedIn" sortConfig={sortConfig} requestSort={requestSort}>Bank Account</SortableHeader>
                         <SortableHeader columnKey="entityName" sortConfig={sortConfig} requestSort={requestSort}>Entity</SortableHeader>
                     </tr>
@@ -43,7 +45,9 @@ const PaymentTable = ({ invoices, sortConfig, requestSort }) => {
                             <td className="px-4 py-3 font-mono text-gray-600">{invoice.invoiceNumber}</td>
                             <td className="px-4 py-3 text-gray-800 font-medium">{invoice.customerName}</td>
                             <td className="px-4 py-3 font-semibold text-gray-800 text-right">₹{invoice.total?.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                            <td className="px-4 py-3 text-gray-600">{invoice.paymentReceivedIn}</td>
+                            <td className="px-4 py-3 text-gray-600 text-right">₹{invoice.tdsReceivable?.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td> {/* Added TDS Amount data */}
+                            <td className="px-4 py-3 text-gray-600 text-right">₹{invoice.gstTds?.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td> {/* Added TDS GST data */}
+                            <td className="px-4 py-3 text-gray-600">{invoice.receivedInBankName}</td> {/* Used receivedInBankName as per AppContext, assuming it's available */}
                             <td className="px-4 py-3 text-gray-600">{invoice.entityName}</td>
                         </tr>
                     ))}
