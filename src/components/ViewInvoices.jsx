@@ -333,7 +333,10 @@ function ViewInvoices({ initialFilters }) {
             const payload = {
                 status: 'Paid',
                 paymentDate: paymentDetails.paymentDate,
-                paymentReceivedIn: paymentDetails.bankAccount
+                paymentReceivedIn: paymentDetails.bankAccount,
+                totalAmountReceived: paymentDetails.totalAmountReceived, // Added
+                tdsReceivable: paymentDetails.tdsReceivable,             // Added
+                gstTds: paymentDetails.gstTds                           // Added
             };
             await updateDoc(doc(db, invoicesCollectionPath, invoice.id), payload);
             logAuditEvent('MARK_INVOICE_AS_PAID', {
